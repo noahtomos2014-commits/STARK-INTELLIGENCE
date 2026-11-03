@@ -1,0 +1,9 @@
+{
+  "name":"stark-intelligence",
+  "version":"1.0.0",
+  "private":true,
+  "type":"module",
+  "scripts":{"dev":"vite --config client/vite.config.js","build":"vite build --config client/vite.config.js","start":"node server/index.js"},
+  "dependencies":{"@google/genai":"^1.11.0","dotenv":"^16.4.5","express":"^4.21.2","react":"^18.3.1","react-dom":"^18.3.1"},
+  "devDependencies":{"vite":"^5.4.14"}
+}
