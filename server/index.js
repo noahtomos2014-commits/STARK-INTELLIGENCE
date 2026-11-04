@@ -18,10 +18,10 @@ app.post('/api/chat',async(req,res)=>{
   const contents=history.filter(x=>x&&['user','model'].includes(x.role)&&typeof x.text==='string').map(x=>({role:x.role,parts:[{text:x.text.slice(0,12000)}]}));
   contents.push({role:'user',parts:[{text:message}]});
   const ai=new GoogleGenAI({apiKey:process.env.GEMINI_API_KEY});
-  const result=await ai.models.generateContent({model:'gemini-2.5-flash',contents,config:{systemInstruction:'You are JARVIS, the personal AI assistant for STARK INTELLIGENCE. Be intelligent, calm, polished, concise but useful, and lightly witty. Answer the actual question with fresh reasoning. Admit uncertainty. Never claim to have performed actions you cannot perform.'}});
+  const result=await ai.models.generateContent({model:'gemini-3.8-flash',contents,config:{systemInstruction:'You are JARVIS, the personal AI assistant for STARK INTELLIGENCE. Be intelligent, calm, polished, concise but useful, and lightly witty. Answer the actual question with fresh reasoning. Admit uncertainty. Never claim to have performed actions you cannot perform.'}});
   const reply=result.text?.trim();
   if(!reply)return res.status(502).json({error:'Gemini returned an empty response. Please try again.'});
-  res.json({reply,model:'gemini-2.5-flash'});
+  res.json({reply,model:'gemini-3.8-flash'});
  }catch(error){console.error('Gemini request failed:',error);res.status(500).json({error:'Gemini request failed. Check your API key and server logs.'});}
 });
 const dist=path.resolve(here,'../dist');
