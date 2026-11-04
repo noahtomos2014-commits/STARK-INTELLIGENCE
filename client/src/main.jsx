@@ -5,7 +5,7 @@ function App(){
  const bottom=useRef(null);
  useEffect(()=>{const t=setInterval(()=>setClock(new Date()),1000);fetch('/api/health').then(r=>r.json()).then(d=>setStatus(d.aiConfigured?'SYSTEM READY':'API KEY REQUIRED')).catch(()=>setStatus('SERVER OFFLINE'));return()=>clearInterval(t)},[]);
  useEffect(()=>{const load=()=>setVoices(window.speechSynthesis?.getVoices?.()||[]);load();window.speechSynthesis?.addEventListener?.('voiceschanged',load);return()=>window.speechSynthesis?.removeEventListener?.('voiceschanged',load)},[]);
- useEffect(()=>bottom.current?.scrollIntoView({behavior:'smooth'}),[messages,busy]);
+ useEffect(()=>{if(bottom.current){bottom.current.scrollIntoView({behavior:'smooth'});}},[messages,busy]);
  const selected=useMemo(()=>voices.find(v=>v.voiceURI===voiceURI)||voices.find(v=>v.lang?.startsWith('en'))||voices[0],[voices,voiceURI]);
  function speak(text){if(!voiceOn||!window.speechSynthesis)return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);if(selected)u.voice=selected;u.rate=rate;window.speechSynthesis.speak(u)}
  async function send(text=input){const q=text.trim();if(!q||busy)return;const history=messages.slice(-16).map(m=>({role:m.role==='assistant'?'model':'user',text:m.text}));setMessages(p=>[...p,{role:'user',text:q}]);setInput('');setBusy(true);try{const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q,history})});const d=await r.json();if(!r.ok)throw Error(d.error||'Request failed');setMessages(p=>[...p,{role:'assistant',text:d.reply}]);speak(d.reply);setStatus('SYSTEM READY')}catch(e){setMessages(p=>[...p,{role:'assistant',text:'Connection issue: '+e.message}]);setStatus('ATTENTION REQUIRED')}finally{setBusy(false)}}
