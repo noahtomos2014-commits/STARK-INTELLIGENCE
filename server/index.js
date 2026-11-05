@@ -80,9 +80,9 @@ app.post('/api/chat', async (req, res) => {
       const ai = new GoogleGenAI({
         apiKey: process.env.GEMINI_API_KEY,
         httpOptions: {
-          timeout: 60000,
+          timeout: 10000,
           retryOptions: {
-            attempts: 2,
+            attempts: 1,
             initialDelay: 1,
             maxDelay: 1,
             expBase: 2,
